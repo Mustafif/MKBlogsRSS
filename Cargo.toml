@@ -1,0 +1,21 @@
+[package]
+name = "mkblogs_rss"
+version = "0.1.0"
+edition = "2021"
+description = "Provides the articles from Mustafif Khan's blog sites"
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0.79"
+reqwest = { version = "0.11.23", features = ["rustls"] }
+rss = "2.0.6"
+serde = { version = "1.0.194", features = ["derive"] }
+tokio = { version = "1.35.1", features = ["macros", "rt-multi-thread"] }
+
+
+[profile.release]
+lto = true
+strip = true
+panic = "abort"
+codegen-units = 1
+opt-level = "s"
