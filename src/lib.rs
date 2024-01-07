@@ -4,10 +4,10 @@ use rss::{Item, Channel};
 use anyhow::Result;
 use tokio::{spawn, join};
 use serde::{Serialize, Deserialize};
-
+use std::borrow::Cow;
 pub mod consts;
 
-pub type RSSMap = HashMap<Source, Vec<Article>>;
+pub type RSSMap<'a> = HashMap<Source, Cow<'a, [Article]>>;
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Article{
     title: String,
@@ -53,7 +53,7 @@ pub async fn get_channel(client: Client, url: &str) -> Result<Channel>{
     Ok(Channel::read_from(&bytes[0..])?)
 }
 
-pub async fn feed() -> Result<RSSMap>{
+pub async fn feed() -> Result<RSSMap<'static>>{
     let user_agent = header::HeaderValue::from_static("MK-RSS");
     let client = Client::builder()
         .default_headers({
@@ -87,8 +87,8 @@ pub async fn feed() -> Result<RSSMap>{
 
     let map = {
         let mut map = HashMap::new();
-        _ = map.insert(Source::DevTo, devto_articles);
-        _ = map.insert(Source::MoKa, moka_articles);
+        _ = map.insert(Source::DevTo, Cow::from(devto_articles));
+        _ = map.insert(Source::MoKa, Cow::from(moka_articles));
         map
     };
 
