@@ -4,7 +4,7 @@ use rss::{Channel, Item};
 use serde::{Deserialize, Serialize};
 use std::borrow::Cow;
 use std::collections::HashMap;
-use tokio::{join, spawn};
+use tokio::spawn;
 pub mod consts;
 
 pub type RSSMap<'a> = HashMap<Source, Cow<'a, [Article]>>;
